@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-from my_settings import DATABASES, SECRET_KEY
+from my_settings import DATABASES, SECRET_KEY, ALGORITHM
 
 import pymysql
 
@@ -42,7 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders'
+    'corsheaders',
+    'users',
+    'survey',
+    'subscriptions',
+    'products',
+    'orders',
+    'carts',
+    'core'
 ]
 
 MIDDLEWARE = [
@@ -82,7 +89,7 @@ WSGI_APPLICATION = 'yakurt.wsgi.application'
 DATABASES = DATABASES
 
 
-
+ALGORITHM = ALGORITHM
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
