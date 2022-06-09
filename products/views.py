@@ -1,3 +1,27 @@
-from django.shortcuts import render
+from django.http  import JsonResponse
+from django.views import View
 
-# Create your views here.
+from products.models import Product
+
+class ProductDetailView(View):
+    def get(self, request, product_id):
+        if not Product.objects.filter(id=product_id).exists():
+            return JsonResponse({'Message': 'PRODUCT_DOES_NOT_EXIST'}, status=404)
+        
+        product = Product.objects.filter(id=product_id)
+
+        results = [{
+            'id'             : product.id,
+            'title'          : product.title,
+            'information'    : product.information,
+            'name'           : product.name,
+            'description'    : product.description,
+            'image_url'      : product.image_url,
+            'price'          : product.price,
+            'time'           : product.time,
+            'is_subscription': product.is_subscription,
+            'review_count'   : product.subscriptionitem_set.all().first().subscription.review_set.count(),
+            'product_effect' : [effect.name for effect in product.effect_set.all()]
+        } for product in product]
+
+        return JsonResponse({'results': results}, status=200)
