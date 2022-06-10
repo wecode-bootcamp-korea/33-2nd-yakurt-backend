@@ -31,7 +31,7 @@ class CartTest(TestCase):
         )
     
         self.token = jwt.encode({'user_id':User.objects.get(id=1).id}, settings.SECRET_KEY, settings.ALGORITHM)
-
+        
     def tearDown(self):
         Cart.objects.all().delete()
 
