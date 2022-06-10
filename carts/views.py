@@ -44,3 +44,26 @@ class CartView(View):
         except KeyError:
             return JsonResponse({"message" : "KEY_ERROR"}, status=400)
 
+    @login_decorator
+    def patch(self, request, cart_id):
+            data      = json.loads(request.body)
+            quantity  = data['quantity']
+            
+            if quantity <= 0:
+                return JsonResponse({'message':'QUANTITY_ERROR'}, status=400)
+
+            cart = Cart.objects.get(id=cart_id, user=request.user)
+            cart.quantity = quantity
+            cart.save()
+
+            data = {
+                "id"             : cart.id,
+                "img"            : cart.product.image_url,
+                "title"          : cart.product.name,
+                "quantity"       : int(cart.quantity),
+                "price"          : int(cart.product.price),
+                "is_subscription": cart.product.is_subscription,
+                "is_user_survey" : cart.is_user_survey
+            }
+
+            return JsonResponse({'message':'SUCCESS', 'data': data}, status=200)
