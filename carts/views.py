@@ -63,5 +63,10 @@ class CartView(View):
             "is_user_survey" : cart.is_user_survey
         } for cart in carts]
 
-
         return JsonResponse({"carts": results}, status=200)
+
+    @login_decorator
+    def delete(self, request):
+
+        Cart.objects.filter(user_id = request.user.id).delete()
+        return JsonResponse({'message' : 'NO_CART'}, status = 204)
