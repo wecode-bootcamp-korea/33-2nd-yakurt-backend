@@ -13,8 +13,7 @@ class Order(TimeStampedModel):
 
 class OrderItem(TimeStampedModel):
     quantity     = models.IntegerField()
-    prodcut      = models.ForeignKey('products.Product', on_delete=models.CASCADE)
-    subscription = models.ForeignKey('subscriptions.Subscription', on_delete=models.CASCADE)
+    product      = models.ForeignKey('products.Product', on_delete=models.CASCADE)
     order        = models.ForeignKey('Order', on_delete=models.CASCADE)
 
     class Meta:
