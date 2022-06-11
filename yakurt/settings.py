@@ -11,7 +11,16 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-from my_settings import DATABASES, SECRET_KEY, ALGORITHM, KAKAO_CLIENT_ID, KAKAO_REDIRECT_URI
+from my_settings import (DATABASES, 
+SECRET_KEY, 
+ALGORITHM, 
+KAKAO_CLIENT_ID, 
+KAKAO_REDIRECT_URI, 
+AWS_ACCESS_KEY_ID, 
+AWS_SECRET_ACCESS_KEY, 
+AWS_STORAGE_BUCKET_NAME, 
+AWS_REGION, 
+AWS_IMAGE_URL) 
 
 import pymysql
 
@@ -28,7 +37,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -88,6 +97,13 @@ WSGI_APPLICATION = 'yakurt.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 DATABASES = DATABASES
 
+KAKAO_CLIENT_ID         = KAKAO_CLIENT_ID
+KAKAO_REDIRECT_URI      = KAKAO_REDIRECT_URI
+AWS_ACCESS_KEY_ID       = AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY   = AWS_SECRET_ACCESS_KEY
+AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
+AWS_REGION              = AWS_REGION
+AWS_IMAGE_URL           = AWS_IMAGE_URL
 
 ALGORITHM = ALGORITHM
 # Password validation

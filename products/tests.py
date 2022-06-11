@@ -86,7 +86,7 @@ class ProductDetailTest(TestCase):
         client = Client()
 
         response = client.get('/products/1')
-        print(response)
+
         self.assertEqual(response.json(),
             {
                 'results' : [{
