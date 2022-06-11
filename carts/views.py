@@ -47,11 +47,9 @@ class CartView(View):
 
     @login_decorator
     def get(self, request):
+
         user = request.user
         carts = Cart.objects.filter(user = user) 
-
-        if not Cart.objects.filter(user=user).exists():
-            return JsonResponse({'message': 'USER_CART_NOT_EXIST'}, status=404)
 
         results = [{
             "id"             : cart.id,
@@ -62,6 +60,5 @@ class CartView(View):
             "is_subscription": cart.product.is_subscription,
             "is_user_survey" : cart.is_user_survey
         } for cart in carts]
-
 
         return JsonResponse({"carts": results}, status=200)
