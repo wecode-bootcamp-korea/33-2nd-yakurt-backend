@@ -22,6 +22,9 @@ class OrderView(View):
             payment_method_id = data['payment_method_id']
             select_cart       = data['select_cart']
             carts             = Cart.objects.filter(user=user, id__in=select_cart)
+
+            if not carts:
+                return JsonResponse({'message': 'EMPTY_CART'}, status=400)
            
             with transaction.atomic():
                 order = Order.objects.create(
