@@ -1,7 +1,7 @@
 from django.urls import path
 
-from survey.views import UserSurveyView
+from survey.views import UserSurveyListView
 
 urlpatterns = [
-    path('/user',UserSurveyView.as_view()),
+    path('',UserSurveyListView.as_view()),
 ]
