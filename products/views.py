@@ -24,4 +24,23 @@ class ProductDetailView(View):
             'product_effect' : [effect.name for effect in product.effect_set.all()]
         } for product in product]
 
+class ProductListView(View):
+    def get(self, request):
+        offset   = int(request.GET.get('offset', 0))
+        limit    = int(request.GET.get('limit', 15))
+        products = Product.objects.all()[offset:offset+limit]
+        
+        results = [{
+            'id'             : product.id,
+            'title'          : product.title,
+            'information'    : product.information,
+            'name'           : product.name,
+            'description'    : product.description,
+            'image_url'      : product.image_url,
+            'price'          : product.price,
+            'time'           : product.time,
+            'is_subscription': product.is_subscription,
+            'product_effect' : [effect.name for effect in product.effect_set.all()]
+        }for product in products]
+
         return JsonResponse({'results': results}, status=200)
