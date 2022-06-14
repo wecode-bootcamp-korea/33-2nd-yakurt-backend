@@ -24,6 +24,8 @@ class ProductDetailView(View):
             'product_effect' : [effect.name for effect in product.effect_set.all()]
         } for product in product]
 
+        return JsonResponse({'results': results}, status=200)
+
 class ProductListView(View):
     def get(self, request):
         offset   = int(request.GET.get('offset', 0))
