@@ -94,6 +94,12 @@ class Reviewdetailview(View) :
         ]
         
         return JsonResponse({'results': results,}, status=200)
+    
+    @login_decorator
+    def delete(self, request, subscription_id):
+        Review.objects.filter(subscription_id=subscription_id, user_id=request.user.id).delete()
+        return JsonResponse({'Message': 'NO_CONTENT'}, status=204)
+
 class SubscriptionListview(View) :
     @login_decorator
     def get(self, request):
@@ -115,5 +121,3 @@ class SubscriptionListview(View) :
         }for subscription in subscription]
         
         return JsonResponse({'results': results}, status=200)
-
-
