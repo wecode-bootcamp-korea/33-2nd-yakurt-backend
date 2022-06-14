@@ -18,6 +18,7 @@ class CartView(View):
             user           = request.user
             product_id     = data['product_id']
             quantity       = data['quantity']
+            is_user_survey = data['is_user_survey']
            
             if not Product.objects.get(id=product_id):
                 return JsonResponse({'message': 'PRODUCT_NOT_EXIST'}, status=400)
@@ -31,7 +32,7 @@ class CartView(View):
                 product_id = product_id,
                 defaults    = {
                     'quantity'      : quantity,
-                    'is_user_survey': True if SurveyProduct.objects.filter(product_id=product_id).exists() else False
+                    'is_user_survey': is_user_survey
                 }
             )
 
