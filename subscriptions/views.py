@@ -1,4 +1,3 @@
-import json
 import uuid
 
 import boto3
@@ -81,7 +80,20 @@ class Reviewdetailview(View) :
         
         except Subscription.DoesNotExist:
             return JsonResponse({'Message': 'SUBSCRIPTION_DOES_NOT_EXIST'}, status=404)
+
+    @login_decorator
+    def get(self, request, subscription_id) :
+        results = [{
+            'id'       : review.id,
+            'nick_name': review.user.nick_name,
+            'content'  : review.content,
+            'image_url': review.image_url,
+            'create_at': review.created_at,
+            'products' : [subscription.product.name for subscription in review.subscription.subscriptionitem_set.all()]
+        } for review in Review.objects.filter(subscription_id=subscription_id)
+        ]
         
+        return JsonResponse({'results': results,}, status=200)
 class SubscriptionListview(View) :
     @login_decorator
     def get(self, request):
@@ -103,3 +115,5 @@ class SubscriptionListview(View) :
         }for subscription in subscription]
         
         return JsonResponse({'results': results}, status=200)
+
+
