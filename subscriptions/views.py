@@ -49,7 +49,6 @@ class FileHandler:
     def upload(self, file):
         return self.client.upload(file)
 
-
 class Reviewdetailview(View) :
     @login_decorator
     def post(self, request, subscription_id) :
@@ -146,3 +145,30 @@ class Reviewlistview(View) :
             })
 
         return JsonResponse({'results': results,'reviews_count': reviews_count}, status=200)
+    
+class Reviewlistdetailview(View) :
+    def get(self, request, review_id) :
+        try:
+            review               = Review.objects.get(id=review_id)
+            now                  = datetime.now()
+            days                 = (now) - (review.subscription.created_at.replace(tzinfo=None))
+            subscriptions_months = days.days//30
+            results = {
+                'id'                  : review.id,
+                'nick_name'           : review.user.nick_name,
+                'content'             : review.content,
+                'image_url'           : review.image_url,
+                'create_at'           : review.created_at,
+                'subscriptions_months': subscriptions_months,
+                'products'            : [{
+                    'product_id'         : subscription.product.id,
+                    'product_title'      : subscription.product.title,
+                    'product_information': subscription.product.information,
+                    'product_image_url'  : subscription.product.image_url,
+                }for subscription in review.subscription.subscriptionitem_set.all()]
+            }
+            
+            return JsonResponse({'results': results}, status=200)
+        
+        except Review.DoesNotExist:
+            return JsonResponse({'Message': 'REVIEW_DOES_NOT_EXIST'}, status=404)
