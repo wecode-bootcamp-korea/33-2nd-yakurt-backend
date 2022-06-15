@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 import boto3
 from django.http  import JsonResponse
@@ -119,5 +120,29 @@ class SubscriptionListview(View) :
                 'create_at'     : review.created_at,
                 }for review in subscription.review_set.all()]
         }for subscription in subscription]
-        
+
         return JsonResponse({'results': results}, status=200)
+
+class Reviewlistview(View) :
+    def get(self, request) :
+        reviews       = Review.objects.all()
+        reviews_count = len(reviews)
+        now           = datetime.now()
+        
+        results = []
+        
+        for review in reviews:
+            days = (now) - (review.subscription.created_at.replace(tzinfo=None))
+            subscriptions_months = days.days//30
+            
+            results.append({
+                'id'                  : review.id,
+                'nick_name'           : review.user.nick_name,
+                'content'             : review.content,
+                'image_url'           : review.image_url,
+                'create_at'           : review.created_at,
+                'subscriptions_months': subscriptions_months,
+                'products'            : [subscription.product.name for subscription in review.subscription.subscriptionitem_set.all()]
+            })
+
+        return JsonResponse({'results': results,'reviews_count': reviews_count}, status=200)
