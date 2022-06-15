@@ -5,7 +5,7 @@ from django.views    import View
 
 from yakurt.settings import KAKAO_CLIENT_ID, KAKAO_REDIRECT_URI, SECRET_KEY, ALGORITHM
 from users.models    import User
-from core.utils    import login_decorator
+from core.utils      import login_decorator
 
 class KaKaoClient:
     def __init__(self, kakao_client_id):
@@ -77,8 +77,6 @@ class kakaoCallBackView(View):
         except Exception as e:
             return JsonResponse({'message' : e.args[0]} , status = e.args[1])
         
-from core.utils import login_decorator
-
 class UserView(View):
     @login_decorator
     def get(self, request):
@@ -92,3 +90,14 @@ class UserView(View):
         }
 
         return JsonResponse({'results':results}, status=200)
+    
+    @login_decorator
+    def patch(self, request):
+        user              = request.user
+        data              = json.loads(request.body)
+        
+        user.phone_number = data['phone_number'] if data['phone_number'] else user.phone_number
+        user.address      = data['address'] if data['address'] else user.address
+        user.save()
+
+        return JsonResponse({'Message': 'SUCCESS'}, status=200)
