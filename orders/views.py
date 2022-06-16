@@ -5,7 +5,7 @@ from django.views         import View
 from django.http          import JsonResponse
 from django.db            import transaction
 from django.forms         import FloatField
-from django.db.models     import F, Sum, DecimalField
+from django.db.models     import F, Sum, FloatField
 
 from core.utils           import login_decorator
 from carts.models         import Cart
@@ -83,12 +83,12 @@ class OrderView(View):
             'order_number': order.order_number,
             'order_date'  : order.created_at,
             'product'     : [{
-            'order_item': orderitem.product.name,
-            'img'       : orderitem.product.image_url,
-            'quantity'  : orderitem.quantity,
-            'price'     : orderitem.product.price,
-            } for orderitem in order.orderitem_set.all()],
-            'total_bill'      : order.orderitem_set.aggregate(item_price=Sum(F('product__price') * F('quantity') * 0.9 + 2500, output_field = DecimalField()))['item_price'],
+                'order_item': orderitem.product.name,
+                'img'       : orderitem.product.image_url,
+                'quantity'  : orderitem.quantity,
+                'price'     : float(orderitem.product.price),
+                } for orderitem in order.orderitem_set.all()],
+            'total_bill'      : order.orderitem_set.aggregate(item_price=Sum(F('product__price') * F('quantity') * 0.9 + 2500, output_field = FloatField()))['item_price'],
             'user_name'       : order.user.nick_name,
             'user_address'    : order.user.address,
             'user_phonenumber': order.user.phone_number,
