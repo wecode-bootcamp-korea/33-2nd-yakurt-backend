@@ -81,3 +81,25 @@ class Reviewdetailview(View) :
         
         except Subscription.DoesNotExist:
             return JsonResponse({'Message': 'SUBSCRIPTION_DOES_NOT_EXIST'}, status=404)
+        
+class SubscriptionListview(View) :
+    @login_decorator
+    def get(self, request):
+        user = request.user
+        
+        subscription = Subscription.objects.filter(user_id = user.id)
+        
+        results = [{
+            'subscription_id'        : subscription.id,
+            'subscription_created_at': subscription.created_at,
+            'subscription_product'   : [subscription.product.name for subscription in subscription.subscriptionitem_set.all()],
+            'is_subscribing'         : subscription.is_subscribing,
+            'subscription_review'    : [{
+                'review_id'     : review.id,
+                'review_img'    : review.image_url,
+                'review_content': review.content,
+                'create_at'     : review.created_at,
+                }for review in subscription.review_set.all()]
+        }for subscription in subscription]
+        
+        return JsonResponse({'results': results}, status=200)
